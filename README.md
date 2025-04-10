@@ -1,6 +1,6 @@
 
-<H3>ENTER YOUR NAME</H3>
-<H3>ENTER YOUR REGISTER NO.</H3>
+<H3>SHRI SAI ARAVIND. R</H3>
+<H3>212223040197</H3>
 <H3>EX. NO.4</H3>
 <H3>DATE:</H3>
 <H1 ALIGN =CENTER>Implementation of MLP with Backpropagation for Multiclassification</H1>
@@ -116,11 +116,92 @@ Normalize our dataset.
 
 <H3>Program:</H3> 
 
-Insert your code here
+```py
+#Include packages and builtin classes
+import pandas as pd
+import sklearn
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report, confusion_matrix
 
+#Read the csv file to be considered for Multi-classification
+df = pd.read_csv("Iris_data.csv")
+df.head()
+# Seperate the input features and target from the dataset
+X = df.drop("species", axis = 1)
+y = df["species"]
+
+X
+X.isnull().sum()
+X = X.fillna(X.median(numeric_only=True))
+X.isnull().sum()
+
+y
+#Transform the categorial into numerical values
+le = LabelEncoder()
+yenc = le.fit_transform(y)
+yenc
+
+#Split the data  for training  and testing
+x_train, x_test, y_train, y_test = train_test_split(X,yenc, test_size=0.3, random_state=42)
+
+# Normalizing input features
+scaler = StandardScaler()
+x_train_scaled = scaler.fit_transform(x_train)
+x_test_scaled = scaler.transform(x_test)
+
+x_train_scaled
+
+x_test_scaled
+
+#Define the MLP classifier
+classifier = MLPClassifier(hidden_layer_sizes=(10,10,10), max_iter=1000)
+#Train the classifier 
+classifier.fit(x_train_scaled, y_train)
+
+predicitons = classifier.predict(x_test_scaled)
+flowers = le.inverse_transform(predicitons)
+res_df = pd.DataFrame({"Predicted Flowers":flowers, "Actual Flowers": le.inverse_transform(y_test)})
+res_df.tail(15)
+
+# Evaluation of algorithm performance in classifying.
+confusion_matrix(y_test, predicitons)
+
+print(classification_report(y_test, predicitons))
+from sklearn.metrics import accuracy_score
+
+f"{accuracy_score(y_test, predicitons)*100:2f}"
+```
 <H3>Output:</H3>
 
-Show your results here
+## Dataset
+![alt text](image.png)
+
+## Labeled output set
+![alt text](image-1.png)
+
+## Scaled Trian set
+![alt text](image-2.png)
+
+## Scaled Test set
+![alt text](image-3.png)
+
+## MLP Classifier property
+![alt text](image-4.png)
+
+## Predicted vs Actual Labels sample
+![alt text](image-5.png)
+
+## Confusion Matrix
+![alt text](image-6.png)
+
+## Classification Report
+![alt text](image-7.png)
+
+## Accuracy Score
+![alt text](image-8.png)
 
 <H3>Result:</H3>
 Thus, MLP is implemented for multi-classification using python.
